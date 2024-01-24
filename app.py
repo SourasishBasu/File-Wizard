@@ -1,64 +1,71 @@
-from spire.doc import *
-from spire.doc.common import *
+import pypandoc
 import boto3
 import os
-from flask import Flask
+from flask import Flask, jsonify
 
 # Create Flask app
 app = Flask(__name__)
 
-
+# Use pandoc package with pypandoc to convert from .docx to .pdf
 def convert_word_to_pdf(word_file_path, output_dir):
-    # Create a Document object
-    document = Document()
-
-    # Load a Word DOCX file
-    document.LoadFromFile(f"{word_file_path}")
-
-    # Save the file to a PDF file
-    pdf_output_path = os.path.join(output_dir, "WordToPdf.pdf")
-    document.SaveToFile(pdf_output_path, FileFormat.PDF)
-    document.Close()
-
-    return pdf_output_path
+    pypandoc.convert_file(word_file_path, 'pdf', outputfile=output_dir)
 
 
+# Upload to S3
 def upload_to_s3(file_path, bucket_name, object_key):
+    try:
+        s3 = boto3.client('s3')
 
-    s3 = boto3.client('s3')
+        # Upload the file
+        s3.upload_file(file_path, bucket_name, object_key)
 
-    # Upload the file
-    with open(file_path, 'rb') as file:
-        s3.upload_fileobj(file, bucket_name, object_key)
+    except Exception as e:
+        # Return an error message
+        return jsonify({'error': f'Error: {str(e)}'}), 500
 
 
+# Exposing as API to receive POST request containing newly uploaded file name
 @app.route('/<string:filename>', methods=['POST'])
 def download_to_s3(filename):
-    s3 = boto3.client('s3')
 
-    bucket_name = "basu-doc-uploads"
-    filename = filename + ".docx"
+    try:
+        s3 = boto3.client('s3')
 
-    file_path = f"C:/Users/KIIT/PycharmProjects/pythonProject/inputs/{filename}"
-    # Download the file
-    s3.download_file(bucket_name, filename, file_path)
-    lambda_handler(filename)
+        bucket_name = "basu-doc-uploads"
+        filename = filename + ".docx"
 
+        file_path = f"./inputs/{filename}"
 
+        # Download the file
+        s3.download_file(bucket_name, filename, file_path)
+
+        # Call the lambda_handler function
+        lambda_handler(filename)
+
+        # Return a success message
+        return jsonify({'message': 'File downloaded, converted and uploaded successfully'})
+
+    except Exception as e:
+        # Return an error message
+        return jsonify({'error': f'Error: {str(e)}'}), 500  # HTTP status code 500 for internal server error
+
+# Handles the converted file and calls the upload function to the output bucket
 def lambda_handler(name):
-    download_path = f"C:/Users/KIIT/PycharmProjects/pythonProject/inputs/{name}"
-    output_dir = f"C:/Users/KIIT/PycharmProjects/pythonProject/outputs"
+    object_key = name.replace("docx", "pdf")  # The object key is same as the original file name
+    
+    download_path = f"./inputs/{name}"
+    output_dir = f"./outputs/{object_key}"
+    
+    # Convert Word to PDF
+    convert_word_to_pdf(download_path, output_dir)
 
-    # Convert Word to PDF and get the PDF file path
-    pdf_output_path = convert_word_to_pdf(download_path, output_dir)
-
-    # S3 configuration
+    # S3 bucket details
     bucket_name = 'basu-pdf-output'
-    object_key = name.replace("docx", "pdf")  # Adjust the object key as needed
-
+    
     # Upload the PDF file to S3
-    upload_to_s3(pdf_output_path, bucket_name, object_key)
+    upload_to_s3(output_dir, bucket_name, object_key)
 
 
+# App runs on localhost, listens for requests on port 5000
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, host='0.0.0.0', port=5000)
