@@ -13,7 +13,6 @@
   <a href="#running-locally"><strong>Running locally</strong></a> ·
   <a href="#overview"><strong>Overview</strong></a> ·
   <a href="#api-routing"><strong>API Routing</strong></a> ·
-  <a href="#aws-configuration-for-sns"><strong>AWS Configuration</strong></a> ·
   <a href="#authors"><strong>Authors</strong></a>
 </p>
 
@@ -72,6 +71,7 @@ sudo apt install python3.10-venv
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+pip install pypandoc boto3 flask
 mkdir inputs outputs
 touch app.py
 ```
@@ -95,17 +95,17 @@ The flask app should now be running on:
 
 ## API Routing
 
-The `HTTP API` is hosted on AWS using  Lambda function which deploys a `Serverless Express.js app`. Source code for lambda function is in the [`amplify/backend/function/formfunction/src/app.js`](./amplify/backend/function/formfunction/src/app.js)
+The `HTTP API` is hosted on AWS using API Gateway and Lambda function which deploys a `getPresignedURL.js app`. Source code for lambda function is in the [`lambda/presignedURL.js`](./lambda/presignedURL.js)
  
 
 > [!NOTE]
-> To learn more about the `Serverless Express.js app` and how to deploy it, visit the [`amplify/README.md`](./amplify/README.md) 
+> To learn more about the `getPresignedURL.js app` and how to deploy it, visit the [`lambda/README.md`](./lambda/README.md) 
 
 ## AWS Configuration for S3
-
+The frontend of the app is hosted as a Static site in a separate S3 bucket.
 
 > [!NOTE]
-> To learn more about the `S3` static site and how to deploy it, visit the [`lambda-sns/README.md`](./lambda-sns/README.md) 
+> To learn more about the `S3` static site and how to deploy it, visit the [`frontend/README.md`](./frontend/README.md) 
 
 ## Authors
 
@@ -133,18 +133,28 @@ This project is created by [MLSA KIIT](https://mlsakiit.com) for Cloud Computing
 ## Usage
 
 <p align="center"> 
-  <img src="https://github.com/MLSAKIIT/Registration-Validator-SMS/blob/f29507912629613b2ca8ac423484c0b7d6409029/assets/form.png" />
+  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/frontend.png" />
    <br><b>Upload Form template</b>
 </p>
 <br>
 <p align="center"> 
-  <img src="https://github.com/MLSAKIIT/Registration-Validator-SMS/blob/f29507912629613b2ca8ac423484c0b7d6409029/assets/registrations.png" />
+  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/inputs.png" />
    <br><b>S3 uploads-bucket for .docx files</b>
 </p>
 <br>
 <p align="center"> 
-  <img src="https://github.com/MLSAKIIT/Registration-Validator-SMS/blob/f29507912629613b2ca8ac423484c0b7d6409029/assets/ss.png" />
+  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/outputs.png" />
    <br><b>S3 output-bucket for .pdf files</b>
+</p>
+<br>
+<p align="center"> 
+  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/success.png" />
+   <br><b>Site Updated with Download link</b>
+</p>
+<br>
+<p align="center"> 
+  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/pid.png" />
+   <br><b>Flask App process running in EC2</b>
 </p>
 
 ----
