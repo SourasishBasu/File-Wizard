@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Upload file to S3</title>
+  <script src="https://unpkg.com/vue@1.0.28/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios@0.2.1/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h1>S3 Uploader Test</h1>
+
+    <div v-if="!fileData">
+      <h2>Select a file</h2>
+      <input type="file" @change="onFileChange" accept=".docx">
+    </div>
+    <div v-else>
+      <button v-if="!uploadURL" @click="removeFile">Remove file</button>
+      <button v-if="!uploadURL" @click="uploadFile">Upload file</button>
+    </div>
+    <!-- Change the upload bucket URL in the following tags -->
+    <h2 v-if="uploadURL">
+      Success! Download URL:
+      <a :href="'https://output-bucket.s3.amazonaws.com/' + fileName" target="_blank">
+        https://output-bucket.s3.amazonaws.com/{{fileName}}
+      </a>
+    </h2>
+  </div>
+
+  <script>
+    const MAX_FILE_SIZE = 1000000;
+
+    /* ENTER YOUR ENDPOINT HERE */
+
+    const API_ENDPOINT = ''; // e.g. https://ab1234ab123.execute-api.us-east-1.amazonaws.com/default/getPresignedURL
+
+    new Vue({
+      el: "#app",
+      data: {
+        fileData: null,
+        fileName: null,
+        uploadURL: ""
+      },
+      methods: {
+        onFileChange(e) {
+          const files = e.target.files || e.dataTransfer.files;
+          if (!files.length) return;
+          this.readFile(files[0]);
+        },
+        readFile(file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.fileData = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        },
+        removeFile() {
+          this.fileData = null;
+        },
+        async uploadFile() {
+          try {
+            // Get the presigned URL
+            const response = await axios({
+              method: 'GET',
+              url: API_ENDPOINT,
+            });
+
+            this.fileName = response.Key;
+            this.fileName = this.fileName.replace(/\.[^/.]+$/, ".pdf");
+
+            console.log('Uploading to: ', response.uploadURL);
+
+            const arrayBuffer = await fetch(this.fileData).then((response) =>
+              response.arrayBuffer()
+            );
+
+            const blobData = new Blob([new Uint8Array(arrayBuffer)], {
+              type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            });
+
+            // Upload the file using the presigned URL
+            const result = await fetch(response.uploadURL, {
+              method: 'PUT',
+              body: blobData,
+              headers: {
+                'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+              }
+            });
+
+            console.log('Result: ', result);
+
+            // Final URL for the user doesn't need the query string params
+            this.uploadURL = response.uploadURL.split('?')[0];
+          } catch (error) {
+            console.error('Error uploading file', error);
+          }
+        },
+      },
+    });
+  </script>
+  <style type="text/css">
+    body {
+      background: #20262E;
+      padding: 20px;
+      font-family: sans-serif;
+    }
+
+    #app {
+      background: #fff;
+      border-radius: 4px;
+      padding: 20px;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    h2 {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    h1,
+    h2 {
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
+
+    a {
+      color: #42b983;
+    }
+  </style>
+</body>
+
+</html>
