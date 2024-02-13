@@ -41,7 +41,7 @@
 
 
 ## Overview
-<img alt="AWS Architecture" src="./assets/architecture-overview.png">
+<img alt="AWS Architecture" src="./assets/architecture-fw.png">
 
 A static site is hosted on `S3` with a document upload form. We use `API Gateway` to create an API which makes a `GET` request to a `Lambda` function after the user clicks <kbd>Upload File</kbd> on the form.
 
