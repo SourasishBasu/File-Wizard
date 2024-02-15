@@ -55,9 +55,26 @@ The python `microservice` converts documents using `pandoc` package and is expos
 
 The static site returns the download link for the converted file from the `output-bucket`.
 
-## Running locally
+# Configuring application on AWS
 
-First, run the development flask server on Ubuntu Linux:
+## S3 Configuration
+The frontend of the app is hosted as a Static site in a separate S3 bucket.
+
+> [!NOTE]
+> To learn more about the `S3` static site and how to deploy it, visit the [`frontend/README.md`](./frontend/README.md)
+
+## API Routing
+
+The `HTTP API` is hosted on AWS using API Gateway and Lambda function which deploys a `getPresignedURL.js app`. Source code for lambda function is in the [`lambda/presignedURL.js`](./lambda/presignedURL.js)
+
+> [!NOTE]
+> To learn more about the `getPresignedURL.js app` and how to deploy it, visit the [`lambda/README.md`](./lambda/README.md) 
+
+## Setup Flask Microservice in EC2
+
+Create a `EC2 t2.micro` instance with an `Ubuntu Linux AMI` and note the VM's public IPv4 address.
+
+#### Run the Flask development server within the VM:
 
 ### Installation
 ```bash
@@ -76,59 +93,27 @@ mkdir inputs outputs
 touch app.py
 ```
 
-The Flask app should be able to handle requests at all times. It can be run as a background process using `nohup` command to ensure application uptime as long as VM is running even if we were to exit out of remote shell.
-
-The `&` displays the process ID for the python process which may be recorded to perform `kill <PID>` in case the process it to be stopped.
-
-The logs and stdout along with stderr is saved to `log.txt`.
+Copy the contents of `app.py` within the python file by opening it with any code editor (nano, vim etc).
 
 ```bash
 sudo su
 nohup python3 app.py > log.txt 2>&1 &
 ```
 
-The flask app should now be running on:
+The Flask app should now be able to handle requests 24/7. It is being run as a background process using the `nohup` command to ensure application uptime as long as VM is running even if we were to exit out of remote shell.
+
+The `&` displays the process ID for the python process which may be recorded to perform `kill <PID>` in case the process is to be stopped.
+
+The logs and stdout along with stderr is saved to `log.txt` in the same directory.
+
+The Flask app should now be running on:
 [http://{ec2-instance-public-ipv4-address}:5000](http://{ec2-instance-public-ipv4-address}:5000/)
+
+Change the API endpoint in 
 
 > [!WARNING]
 > This command only starts the webapp. You will need to configure the instance Security Group to allow TCP connections to port 5000 of the EC2 instance from any external IPv4 address [0.0.0.0/0] on AWS to get the full functionality.
 
-## API Routing
-
-The `HTTP API` is hosted on AWS using API Gateway and Lambda function which deploys a `getPresignedURL.js app`. Source code for lambda function is in the [`lambda/presignedURL.js`](./lambda/presignedURL.js)
- 
-
-> [!NOTE]
-> To learn more about the `getPresignedURL.js app` and how to deploy it, visit the [`lambda/README.md`](./lambda/README.md) 
-
-## AWS Configuration for S3
-The frontend of the app is hosted as a Static site in a separate S3 bucket.
-
-> [!NOTE]
-> To learn more about the `S3` static site and how to deploy it, visit the [`frontend/README.md`](./frontend/README.md) 
-
-## Authors
-
-This project is created by [MLSA KIIT](https://mlsakiit.com) for Cloud Computing Domain's Project Wing:
-
-- Sourasish Basu ([@SourasishBasu](https://github.com/SourasishBasu)) - [MLSA KIIT](https://mlsakiit.com)
-
-## Version
-| Version | Date          		| Comments        |
-| ------- | ------------------- | --------------- |
-| 1.0     | Jan 24th, 2024   | Initial release |
-
-## Future Roadmap
-**Website/API**
-- [ ] HTTPS Validation
-- [ ] File Validation and Sanitization on server side using SHA checksums
-- [ ] Better pdf engine to improve formatting during conversion
-- [ ] Better Error Handling
-  
-**AWS Infrastructure**
-- [ ] Actual implementation in production
-- [ ] Conversion feature between multiple file types
-- [ ] Implementing image compression using methods such as Huffman Encoding
 
 ## Usage
 
@@ -156,5 +141,28 @@ This project is created by [MLSA KIIT](https://mlsakiit.com) for Cloud Computing
   <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/pid.png" />
    <br><b>Flask App process running in EC2</b>
 </p>
+
+## Authors
+
+This project is created by [MLSA KIIT](https://mlsakiit.com) for Cloud Computing Domain's Project Wing:
+
+- Sourasish Basu ([@SourasishBasu](https://github.com/SourasishBasu)) - [MLSA KIIT](https://mlsakiit.com)
+
+## Version
+| Version | Date          		| Comments        |
+| ------- | ------------------- | --------------- |
+| 1.0     | Jan 24th, 2024   | Initial release |
+
+## Future Roadmap
+**Website/API**
+- [ ] HTTPS Validation
+- [ ] File Validation and Sanitization on server side using SHA checksums
+- [ ] Better pdf engine to improve formatting during conversion
+- [ ] Better Error Handling
+  
+**AWS Infrastructure**
+- [ ] Actual implementation in production
+- [ ] Conversion feature between multiple file types
+- [ ] Implementing image compression using methods such as Huffman Encoding
 
 ----
