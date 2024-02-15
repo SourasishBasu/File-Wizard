@@ -109,7 +109,7 @@ The logs and stdout along with stderr is saved to `log.txt` in the same director
 The Flask app should now be running on:
 [http://{ec2-instance-public-ipv4-address}:5000](http://{ec2-instance-public-ipv4-address}:5000/)
 
-Change the API endpoint in 
+Replace this address in the API endpoint URL within the [trigger_converter.py](./lambda/trigger_converter.py) Lambda function to send the S3 `.docx` files to the Flask microservice to be converted.
 
 > [!WARNING]
 > This command only starts the webapp. You will need to configure the instance Security Group to allow TCP connections to port 5000 of the EC2 instance from any external IPv4 address [0.0.0.0/0] on AWS to get the full functionality.
