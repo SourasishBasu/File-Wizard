@@ -1,5 +1,5 @@
 <a href="https://basu-doc-frontend.s3.us-east-1.amazonaws.com/index.html">
-  <img alt="Vue.js and Python" src="./assets/banner.png">
+  <img alt="NextJs and Python" src="./assets/banner.png">
   <h1 align="center">File Wizard</h1>
 </a>
 
@@ -20,7 +20,7 @@
 ## Features
 
 - **Website**
-  - [Vue.js](https://vuejs.org) App Router
+  - [NextJs](https://nextjs.org) App Router
   - [Amazon Web Services](https://docs.aws.amazon.com/) for backend functionality
   - Support for `HTTP API`, `S3` File Storage, and `Lambda` functions
   - Edge runtime-ready
@@ -70,7 +70,7 @@ The `HTTP API` is hosted on AWS using API Gateway and Lambda function which depl
 > [!NOTE]
 > To learn more about the `getPresignedURL.js app` and how to deploy it, visit the [`lambda/README.md`](./lambda/README.md) 
 
-## Setup Flask Microservice in EC2
+## Setup Flask Microservice in EC2 for PDF conversion
 
 Create a `EC2 t2.micro` instance with an `Ubuntu Linux AMI` and note the VM's public IPv4 address.
 
@@ -118,8 +118,8 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 ## Usage
 
 <p align="center"> 
-  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/frontend.png" />
-   <br><b>Upload Form template</b>
+  <img src="https://github.com/SourasishBasu/File-Wizard/assets/89185962/309a29b3-6e39-4ade-83f9-a42b8bd6d84f"/>
+   <br><b>Upload Form Site</b>
 </p>
 <br>
 <p align="center"> 
@@ -133,8 +133,13 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 </p>
 <br>
 <p align="center"> 
-  <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/success.png" />
-   <br><b>Site Updated with Download link</b>
+  <img src="https://github.com/SourasishBasu/File-Wizard/assets/89185962/2e448ef5-4d1e-45a9-9c34-9975caa244f3" />
+   <br><b>File Uploader</b>
+</p>
+<br>
+<p align="center"> 
+  <img src="https://github.com/SourasishBasu/File-Wizard/assets/89185962/25f068b7-06a8-434f-887e-a912cacab049"/>
+   <br><b>Converted File download popup</b>
 </p>
 <br>
 <p align="center"> 
@@ -155,14 +160,13 @@ This project is created by [MLSA KIIT](https://mlsakiit.com) for Cloud Computing
 
 ## Future Roadmap
 **Website/API**
-- [ ] HTTPS Validation
-- [ ] File Validation and Sanitization on server side using SHA checksums
-- [ ] Better pdf engine to improve formatting during conversion
-- [ ] Better Error Handling
+- [X] File Validation and Sanitization on server side
+- [ ] Better PDF conversion engine to retain original formatting in higher quality
+- [X] Better Error Handling
   
 **AWS Infrastructure**
-- [ ] Actual implementation in production
-- [ ] Conversion feature between multiple file types
+- [X] Actual implementation in production
+- [X] Conversion feature between multiple file types
 - [ ] Implementing image compression using methods such as Huffman Encoding
 
 ----
