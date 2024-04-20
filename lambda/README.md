@@ -2,6 +2,9 @@
 
 This `Lambda` function will handle file upload requests to the input bucket and utilize `API Gateway` which will provide an endpoint which will call the function to generate a presigned url for the S3 bucket to upload the files with.
 
+> [!NOTE]
+> The above demo is for the Lambda handlers for `.docx` presignedURL generator and converter. Follow the same steps for making the required Lambda functions for handling `.PNG` and `.CSV` file types.
+
 ### Features
 - `HTTP` API with endpoint to trigger the `Lambda` function
 - `Lambda` function which queries `S3` bucket to return unique Presigned URL.
@@ -149,7 +152,7 @@ The response body includes the server message:
 "File downloaded, converted and uploaded successfully"
 ```
 
-### Setup
+## Setup
 
 - Go to AWS Console > Lambda from Services
 - Create a Lambda function and configure it as follows:
@@ -159,3 +162,28 @@ The response body includes the server message:
 - Under Triggers select S3 and create a new API
 
 ![s3trigger](https://github.com/SourasishBasu/File-Wizard/assets/89185962/31d68ba3-7bb9-461b-a9a1-c792a56d4da7)
+
+### S3 Output-Bucket configuration
+
+- Go to Permissions and paste the below policy under Bucket Policy:
+
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement":
+    [
+      {
+        "Sid": "PublicRead",
+        "Effect": "Allow",
+        "Principal":"*",
+        "Action":[
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:PutObjectAcl"],
+        "Resource": "arn:aws:s3:::upload-bucket/*"
+      }
+    ]
+  }
+  ```
+
+- Ensure Object ACL is enabled and `Block Public Access` is turned off under input bucket's Permissions.
