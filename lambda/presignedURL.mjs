@@ -11,13 +11,13 @@ export const handler = async (event) => {
 
 const getUploadURL = async function(event) {
   const randomID = parseInt(Math.random() * 10000000);
-  const Key = `${randomID}.docx`;
+  const Key = `${randomID}.docx`; // Change file extension according to upload type
 
   // Get signed URL from S3
   const s3Params = {
     Bucket: process.env.UploadBucket,
     Key: Key,
-    ContentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ContentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Change MIME type depending file upload
     ACL: 'public-read'
   };
 
