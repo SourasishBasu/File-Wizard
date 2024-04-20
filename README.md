@@ -1,7 +1,5 @@
-<a href="https://basu-doc-frontend.s3.us-east-1.amazonaws.com/index.html">
-  <img alt="NextJs and Python" src="./assets/banner.png">
-  <h1 align="center">File Wizard</h1>
-</a>
+
+<h1 align="center">File Wizard</h1>
 
 <p align="center">
   An open-source file conversion webapp built with NextJs, Python<br>
@@ -32,7 +30,7 @@
   - [Amazon EC2](https://aws.amazon.com/sns) for provisioning VM instances 
 
 ### Tech Stack
-![Vue.js](https://img.shields.io/badge/Vue.js-43853D?style=for-the-badge&logo=vuedotjs&logoColor=white)
+![NextJs](https://img.shields.io/badge/Nextjs-black?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-blue?style=for-the-badge&logo=python&logoColor=white)
 ![EC2](https://img.shields.io/badge/ec2-orange?style=for-the-badge&logo=amazon-ec2&logoColor=white)
 ![API Gateway](https://img.shields.io/badge/API%20Gateway-8A2BE2?style=for-the-badge&logo=amazon-api-gateway&logoColor=white)
@@ -57,7 +55,7 @@ The static site returns the download link for the converted file from the `outpu
 
 # Configuring application on AWS
 
-## S3 Configuration
+## S3 Configuration (Only for using the static site as frontend)
 The frontend of the app is hosted as a Static site in a separate S3 bucket.
 
 > [!NOTE]
@@ -114,11 +112,13 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 > [!WARNING]
 > This command only starts the webapp. You will need to configure the instance Security Group to allow TCP connections to port 5000 of the EC2 instance from any external IPv4 address [0.0.0.0/0] on AWS to get the full functionality.
 
+> [!NOTE]
+> Follow the above steps for the `PNG` and `CSV` converter microservices in similar fashion in separate directories and expose them on different ports.
 
 ## Usage
 
 <p align="center"> 
-  <img src="https://github.com/SourasishBasu/File-Wizard/assets/89185962/309a29b3-6e39-4ade-83f9-a42b8bd6d84f"/>
+  <video src= "https://github.com/SourasishBasu/File-Wizard/assets/89185962/405d58e0-a0a2-4aaf-9629-1145efe463bf" width="300"/>
    <br><b>Upload Form Site</b>
 </p>
 <br>
@@ -130,16 +130,6 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 <p align="center"> 
   <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/outputs.png" />
    <br><b>S3 output-bucket for .pdf files</b>
-</p>
-<br>
-<p align="center"> 
-  <img src="https://github.com/SourasishBasu/File-Wizard/assets/89185962/2e448ef5-4d1e-45a9-9c34-9975caa244f3" />
-   <br><b>File Uploader</b>
-</p>
-<br>
-<p align="center"> 
-  <img src="https://github.com/SourasishBasu/File-Wizard/assets/89185962/25f068b7-06a8-434f-887e-a912cacab049"/>
-   <br><b>Converted File download popup</b>
 </p>
 <br>
 <p align="center"> 
