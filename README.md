@@ -1,4 +1,4 @@
-
+![banner](https://github.com/SourasishBasu/File-Wizard/assets/89185962/bff3880e-d6d9-46c6-aa20-a95c2e5952fd)
 <h1 align="center">File Wizard</h1>
 
 <p align="center">
