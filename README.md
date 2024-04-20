@@ -4,7 +4,7 @@
 </a>
 
 <p align="center">
-  An open-source file conversion webapp built with Vue.js, Python<br>
+  An open-source file conversion webapp built with NextJs, Python<br>
   and AWS for the HTTP API, Lambda functions and S3 object storage.<br>Converts .docx files to .pdf
 </p>
 
