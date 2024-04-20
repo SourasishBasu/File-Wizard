@@ -11,9 +11,9 @@ This `Lambda` function will handle file upload requests to the input bucket and 
 The response body includes the presigned upload URL which accepts content type of `application/vnd.openxmlformats-officedocument.wordprocessingml.document` for .docx files, and the `Object Key` name with which it will be uploaded to the bucket
 
 ### Endpoints
-The resource for this API looks like [https://abcdefghij.execute-api.us-east-1.amazonaws.com/](https://abcefghij.execute-api.us-east-1.amazonaws.com/dev/register) with the following path `/getPresignedURL`
+The resource for this API looks like [https://abcdefghij.execute-api.us-east-1.amazonaws.com/](https://abcefghij.execute-api.us-east-1.amazonaws.com/dev/register) with the following path `/getPresignedURL` and is used to upload `.docx` files
 
-The following script shows that [presignedURL.js](./presignedURL.js) only has a GET method route with params mentioned in `s3Params`
+The following script shows that [presignedURL.js](./presignedURL.mjs) only has a GET method route with params mentioned in `s3Params`
 
 ```javascript
 // Get signed URL from S3
@@ -27,12 +27,15 @@ const s3Params = {
   ACL: 'public-read'
 }
 
-const uploadURL = await s3.getSignedUrlPromise('putObject', s3Params)
+const uploadURL = await getSignedUrl(s3Client, new PutObjectCommand(s3Params), {expiresIn: 300});
 
 const response = {
-      "statusCode": 200,
-      "body": JSON.stringify({uploadURL: uploadURL, Key: Key}),
-      "isBase64Encoded": false
+      statusCode: 200,
+      headers: {
+        'Key': Key
+      },
+      body: JSON.stringify({ uploadURL: uploadURL, Key: Key }),
+      isBase64Encoded: false
 };
 ```
 
@@ -52,10 +55,11 @@ The output to the above command should be:
 ```bash
 {"uploadURL":"https://bucket-name.s3.amazonaws.com/fileID.docx?AWSAccessKeyId=AccessKey&Content-Type=application%2Fvnd.openxmlformats-officedocument.wordprocessingml.document&Expires=1706262011&Signature=[unique_signature_string]","Key":"fileID.docx"}
 ```
-### Setup
+
+## Setup
 
 - Go to AWS Console > Lambda from Services
-- Create a Lambda function and configure it as follows:
+- Create a Lambda function with Node.js 20.x and configure it as follows:
 
   ![image](https://github.com/SourasishBasu/File-Wizard/assets/89185962/59106a88-b39f-41db-b548-f8cd20ca11fe)
 
@@ -63,7 +67,7 @@ The output to the above command should be:
 
   ![image](https://github.com/SourasishBasu/File-Wizard/assets/89185962/8b8336fa-582e-452a-be5e-9f06859bfa80)
 
-- Paste the [presignedURL.js](./presignedURL.js) within Code Source Panel.
+- Paste the [presignedURL.mjs](./presignedURL.mjs) within Code Source Panel.
 - Under Configuration > Triggers, save the `API Endpoint URL` which will be used by the frontend to query the Lambda function to retreive the presigned URL
 - Under Configuration > Permission, go to Role. Go to Permission Policies and select Add Permissions > Create Inline Policy.
 - Switch to JSON within Policy Editor and paste the below policy.
@@ -89,6 +93,46 @@ The output to the above command should be:
 This policy gives the `presignedURL Lambda function` access to the `uploads-bucket` on S3 which provides permissions to it to generate a presigned URL for uploading a file object to that bucket.
 
 - Click Next. Name the policy `uploads-policy` and select Create Policy.
+
+### S3 Upload-Bucket configuration
+
+- Go to input bucket's Permissions and under CORS copy the below policy into it:
+  
+  ```
+  <CORSConfiguration>
+    <CORSRule>
+      <AllowedOrigin>http://your-website-domain.com/</AllowedOrigin>
+      <AllowedMethod>PUT</AllowedMethod>
+      <AllowedMethod>POST</AllowedMethod>
+      <AllowedMethod>DELETE</AllowedMethod>
+      <MaxAgeSeconds>3000</MaxAgeSeconds>
+      <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+  </CORSConfiguration>
+  ```
+
+- Paste the below policy under Bucket Policy:
+
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement":
+    [
+      {
+        "Sid": "PublicRead",
+        "Effect": "Allow",
+        "Principal":"*",
+        "Action":[
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:PutObjectAcl"],
+        "Resource": "arn:aws:s3:::upload-bucket/*"
+      }
+    ]
+  }
+  ```
+
+- Ensure Object ACL is enabled and `Block Public Access` is turned off under input bucket's Permissions.
 
 ## Converter Trigger Function
 
