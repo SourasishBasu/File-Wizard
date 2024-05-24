@@ -119,7 +119,12 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 
 <p align="center"> 
   <video src= "https://github.com/SourasishBasu/File-Wizard/assets/89185962/405d58e0-a0a2-4aaf-9629-1145efe463bf" width="300"/>
-   <br><b>Upload Form Site</b>
+   <br><b>DOCX to PDF Conversion</b>
+</p>
+<br>
+<p align="center"> 
+  <video src= "./assets/image.mp4" width="300"/>  
+   <br><b>PNG to PDF Conversion</b>
 </p>
 <br>
 <p align="center"> 
