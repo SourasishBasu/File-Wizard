@@ -41,17 +41,17 @@
 ## Overview
 <img alt="AWS Architecture" src="./assets/architecture-fw.png">
 
-A static site is hosted on `S3` with a document upload form. We use `API Gateway` to create an API which makes a `GET` request to a `Lambda` function after the user clicks <kbd>Upload File</kbd> on the form.
+- A static site is hosted on `S3` with a document upload form. We use `API Gateway` to create an API which makes a `GET` request to a `Lambda` function after the user clicks <kbd>Upload File</kbd> on the form.
 
-The API sends a `presigned bucket URL` for the `uploads-bucket`. The site then automatically conducts a `PUT` request to the same bucket with the `.docx` file data.
+- The API sends a `presigned bucket URL` for the `uploads-bucket`. The site then automatically conducts a `PUT` request to the same bucket with the `.docx` file data.
 
-Another `Lambda` function is configured to listen for `PUT Object events` in the S3 `uploads-bucket`. It parses the event record for file name and sends a `POST` request to the Python `Flask App` performing the document conversion.
+- Another `Lambda` function is configured to listen for `PUT Object events` in the S3 `uploads-bucket`. It parses the event record for file name and sends a `POST` request to the Python `Flask App` performing the document conversion.
 
-An `EC2` instance is deployed with an Ubuntu OS image. A python script is setup to run as a background process.
+- An `EC2` instance is deployed with an Ubuntu OS image. A python script is setup to run as a background process.
 
-The python `microservice` converts documents using `pandoc` package and is exposed as an API using `Flask` listening for `POST` requests on a specified port. It downloads and saves the specified file with its ID, uploads the converted file to the `output-bucket` on `S3` and performs cleanup for files saved during runtime.
+- The python microservice converts documents using `pandoc` package and is exposed as an API using `Flask` listening for `POST` requests on a specified port.
 
-The static site returns the download link for the converted file from the `output-bucket`.
+- It downloads and saves the specified file with its ID, uploads the converted file to the `output-bucket` on `S3`. The static site returns the download link for the converted file from the `output-bucket`.
 
 # Configuring application on AWS
 
@@ -119,13 +119,13 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 
 <p align="center"> 
   <video src= "https://github.com/SourasishBasu/File-Wizard/assets/89185962/405d58e0-a0a2-4aaf-9629-1145efe463bf" width="300"/>
-    <br><b>DOCX to PDF Conversion</b>
 </p>
+<p align="center"><b> DOCX to PDF Conversion </b></p>
 <br>
 <p align="center"> 
   <video src= "https://github.com/SourasishBasu/File-Wizard/assets/89185962/a6b96fc3-22e8-4201-9425-932af09d0936" width="300"/>
-    <br><b>PNG to PDF Conversion</b>
 </p>
+<p align="center"><b> PNG to PDF Conversion </b></p>
 <br>
 <p align="center"> 
   <img src="https://github.com/SourasishBasu/File-Wizard/blob/4dff9e2de97c4b4e5aeb06a40a2c829e3ced37b7/assets/inputs.png" />
