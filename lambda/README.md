@@ -161,10 +161,10 @@ The response body includes the server message:
 
 - Under Triggers select S3 and create a new API
 
-![s3trigger](https://github.com/SourasishBasu/File-Wizard/assets/89185962/31d68ba3-7bb9-461b-a9a1-c792a56d4da7)
+![s3trigger](https://github.com/SourasishBasu/File-Wizard/assets/89185962/a3f31ffa-73f5-4ddf-982c-962d5e2c3c62)
 
 > [!IMPORTANT]  
-> For the `PNG` converter change the Prefix to `image/png` and suffix to `.png`
+> For the `PNG` converter change the Suffix to `.png`
 
 ### S3 Output-Bucket configuration
 
