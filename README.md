@@ -75,10 +75,12 @@ Create a `EC2 t2.micro` instance with an `Ubuntu Linux AMI` and note the VM's pu
 #### Run the Flask development server within the VM:
 
 ### Installation
+
+Before installing ensure its the correct Python version via `python -V`
+
 ```bash
 sudo apt update && apt upgrade
-sudo apt install pandoc texlive
-sudo apt install python3.10-venv
+sudo apt install pandoc texlive python3.10-venv
 ```
 
 ### Setup Python venv and script
@@ -98,11 +100,9 @@ sudo su
 nohup python3 app.py > log.txt 2>&1 &
 ```
 
-The Flask app should now be able to handle requests 24/7. It is being run as a background process using the `nohup` command to ensure application uptime as long as VM is running even if we were to exit out of remote shell.
-
-The `&` displays the process ID for the python process which may be recorded to perform `kill <PID>` in case the process is to be stopped.
-
-The logs and stdout along with stderr is saved to `log.txt` in the same directory.
+- The Flask app should now be able to handle requests 24/7. It is being run as a background process using the `nohup` command to ensure application uptime as long as VM is running even if we were to exit out of remote shell.
+- The logs and stdout along with stderr is saved to `log.txt` in the same directory.
+- The `&` displays the process ID for the python process which may be recorded to perform `kill <PID>` in case the process is to be stopped.
 
 The Flask app should now be running on:
 [http://{ec2-instance-public-ipv4-address}:5000](http://{ec2-instance-public-ipv4-address}:5000/)
@@ -116,6 +116,9 @@ Replace this address in the API endpoint URL within the [trigger_converter.py](.
 > Follow the above steps for the `PNG` and `CSV` converter microservices in similar fashion in separate directories and expose them on different ports.
 
 ## Usage
+
+> [!Tip]
+> In case webapp demo videos aren't loading below in the README, please visit [Youtube](https://www.youtube.com/watch?v=7NJh7KChyYo).
 
 <p align="center"> 
   <video src= "https://github.com/SourasishBasu/File-Wizard/assets/89185962/405d58e0-a0a2-4aaf-9629-1145efe463bf" width="300"/>
