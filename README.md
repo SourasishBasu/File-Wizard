@@ -70,9 +70,11 @@ The `HTTP API` is hosted on AWS using API Gateway and Lambda function which depl
 
 ## Setup Flask Microservice in EC2 for PDF conversion
 
-Create a `EC2 t2.micro` instance with an `Ubuntu Linux AMI` and note the VM's public IPv4 address.
+1. Create a `EC2 t2.micro` instance with an `Ubuntu Linux AMI` and note the VM's public IPv4 address.
 
-#### Run the Flask development server within the VM:
+2. Assign an IAM role to the EC2 instance with the `AmazonS3FullAccess` policy attached.
+
+3. Run the Flask development server within the VM:
 
 ### Installation
 
