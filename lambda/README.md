@@ -66,7 +66,7 @@ The output to the above command should be:
 
   ![image](https://github.com/SourasishBasu/File-Wizard/assets/89185962/59106a88-b39f-41db-b548-f8cd20ca11fe)
 
-- Under Triggers select API Gateway and create a new API
+- Under Triggers select API Gateway, create and name a new HTTP API, select `CORS` and leave the rest of the options as default.
 
   ![image](https://github.com/SourasishBasu/File-Wizard/assets/89185962/8b8336fa-582e-452a-be5e-9f06859bfa80)
 
@@ -101,17 +101,24 @@ This policy gives the `presignedURL Lambda function` access to the `uploads-buck
 
 - Go to input bucket's Permissions and under CORS copy the below policy into it:
   
-  ```
-  <CORSConfiguration>
-    <CORSRule>
-      <AllowedOrigin>http://your-website-domain.com/</AllowedOrigin>
-      <AllowedMethod>PUT</AllowedMethod>
-      <AllowedMethod>POST</AllowedMethod>
-      <AllowedMethod>DELETE</AllowedMethod>
-      <MaxAgeSeconds>3000</MaxAgeSeconds>
-      <AllowedHeader>*</AllowedHeader>
-    </CORSRule>
-  </CORSConfiguration>
+  ```json
+  [
+      {
+          "AllowedHeaders": [
+              "*"
+          ],
+          "AllowedMethods": [
+              "PUT",
+              "POST",
+              "GET",
+              "HEAD"
+          ],
+          "AllowedOrigins": [
+              "*"
+          ],
+          "ExposeHeaders": []
+      }
+  ]
   ```
 
 - Paste the below policy under Bucket Policy:
@@ -135,7 +142,7 @@ This policy gives the `presignedURL Lambda function` access to the `uploads-buck
   }
   ```
 
-- Ensure Object ACL is enabled and `Block Public Access` is turned off under input bucket's Permissions.
+- Ensure `Object ACL` is enabled and `Block Public Access` is turned off under input bucket's Permissions.
 
 ## Converter Trigger Function
 
