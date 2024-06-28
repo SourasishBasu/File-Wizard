@@ -173,6 +173,37 @@ The response body includes the server message:
 > [!IMPORTANT]  
 > For the `PNG` converter change the Suffix to `.png`
 
+- Under Configuration > Permission, go to Role. Go to Permission Policies and select Add Permissions > Create Inline Policy.
+- Switch to JSON within Policy Editor and paste the below policy.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream"
+            ],
+            "Resource": "arn:aws:logs:*:*:*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": "arn:aws:s3:::basu-doc-uploads/*"
+        }
+    ]
+}
+```
+
+This policy gives the `trigger converter function` access to the `uploads-bucket` on S3 which provides permissions to it to to receive file upload events due to the trigger linked to the upload bucket.
+
+- Click Next. Name the policy `converter-policy` and select Create Policy.
+
 ### S3 Output-Bucket configuration
 
 - Go to Permissions and paste the below policy under Bucket Policy:
